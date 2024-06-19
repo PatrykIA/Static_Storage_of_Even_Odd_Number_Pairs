@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="12"/>
+    <BuildModes Active="Default"/>
+    <Units>
+      <Unit>
+        <Filename Value="Sprawozdanie2.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <CursorPos X="80" Y="2"/>
+        <UsageCount Value="32"/>
+        <Loaded Value="True"/>
+      </Unit>
+    </Units>
+    <JumpHistory HistoryIndex="2">
+      <Position>
+        <Filename Value="Sprawozdanie2.lpr"/>
+        <Caret Line="196" Column="157" TopLine="163"/>
+      </Position>
+      <Position>
+        <Filename Value="Sprawozdanie2.lpr"/>
+        <Caret Line="13" Column="3" TopLine="3"/>
+      </Position>
+      <Position>
+        <Filename Value="Sprawozdanie2.lpr"/>
+        <Caret Line="23" Column="3" TopLine="13"/>
+      </Position>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>
