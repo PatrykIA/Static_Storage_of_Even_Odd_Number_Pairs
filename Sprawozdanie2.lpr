@@ -1,48 +1,39 @@
-program Sprawozdanie2;
- // Program:Program zapisujący w tablicy zbiór par liczb parzysta-nieparzysta, AiSD7_Z2, ver.3.0, 19/01/2024
-// Rogowski Patryk, Numer indeksu 162866, Rok 1,Wydział Techniki i Informatyki, grupa D2, Sem 1
-
 uses CRT;
-// Definicja rekordu tWezel reprezentującego węzeł listy jednokierunkowej
 
 type
   wWezel = ^tWezel;
   tWezel = record
-    Dana: integer;                           // Pole przechowujące wartość węzła
-    Nastepny: wWezel;                       // Pole przechowujące wskaźnik do następnego węzła
+    Dana: integer;                           
+    Nastepny: wWezel;                       
   end;
-
- // Definicja rekordu tKolejka reprezentującego kolejkę
 
   tKolejka = record
-    Pierwszy, Ostatni: wWezel;                  // Pola przechowujące wskaźniki na pierwszy i ostatni węzeł kolejki
+    Pierwszy, Ostatni: wWezel;                 
   end;
- // Definicja rekordu tParaLiczb reprezentującego parę liczb całkowitych
 
   tParaLiczb = record
-    L1, L2: integer;                            // Pola przechowujące dwie liczby całkowite
+    L1, L2: integer;                            
   end;
-  // Definicja rekordu tCiagParLiczb reprezentującego ciąg par liczb
 
   tCiagParLiczb = record
-    Elem: array[1..25] of tParaLiczb;    // Stała wielkość tablicy
-    n: integer;                         // Pole przechowujące ilość par w ciągu
+    Elem: array[1..25] of tParaLiczb;    
+    n: integer;                         
   end;
 
 var
-  Kolejka: tKolejka;                  // Struktura do obsługi kolejki
-  StosNparz, StosParz: wWezel;       // Wskaźniki stosów parzystych i nieparzystych
-  ParyLiczb: tCiagParLiczb;         // Struktura przechowująca ciąg par liczb
+  Kolejka: tKolejka;
+  StosNparz, StosParz: wWezel;
+  ParyLiczb: tCiagParLiczb;
 
-procedure wyswietlInfoOProgramie; forward;                                                     // Wyswietlanie informacji o programie w konsoli
-procedure wyswietlListe(Lista: wWezel; X, Y: integer); forward;                               //Implementacja funkcji do wyświetlania listy jednokierunkowej.
-procedure wyswietlCiagParLiczb(var Pary: tCiagParLiczb; X, Y: integer); forward;             // Implementacja funkcji do wyświetlania ciągu par liczb.
-procedure DodajDoKolejki(var kolejka: tKolejka; L: integer); forward;                       // Implementacja funkcji dodającej element do kolejki.
-function PobierzZKolejki(var kolejka: tKolejka): integer; forward;                         // Implementacja funkcji pobierającej element z kolejki.
-procedure PolozNaStos(var stos: wWezel; L: integer); forward;                             // Implementacja funkcji kładącej element na stosie.
-function ZdejmijZeStosu(var stos: wWezel): integer; forward;                             // Implementacja funkcji zdejmującej element ze stosu.
-procedure LosujLiczbyDoKolejki(var kolejka: tKolejka); forward;                         // Implementacja funkcji losującej liczby i dodającej je do kolejki.
-procedure RealizAlgCwicz(var kolejka: tKolejka; var pary: tCiagParLiczb); forward;     // Implementacja funkcji realizującej algorytm ćwiczeniowy.
+procedure wyswietlInfoOProgramie; forward;
+procedure wyswietlListe(Lista: wWezel; X, Y: integer); forward;
+procedure wyswietlCiagParLiczb(var Pary: tCiagParLiczb; X, Y: integer); forward;
+procedure DodajDoKolejki(var kolejka: tKolejka; L: integer); forward;
+function PobierzZKolejki(var kolejka: tKolejka): integer; forward;
+procedure PolozNaStos(var stos: wWezel; L: integer); forward;
+function ZdejmijZeStosu(var stos: wWezel): integer; forward;
+procedure LosujLiczbyDoKolejki(var kolejka: tKolejka); forward;
+procedure RealizAlgCwicz(var kolejka: tKolejka; var pary: tCiagParLiczb); forward;
 
 procedure wyswietlInfoOProgramie;
 begin
@@ -52,176 +43,171 @@ end;
 
 procedure wyswietlListe(Lista: wWezel; X, Y: integer);
 var
-  wsk: wWezel;                       // Wskaźnik na aktualny węzeł listy
-  i: integer;                       // Licznik elementów listy
+  wsk: wWezel;
+  i: integer;
 begin
-  wsk := Lista;                       // Inicjalizacja wskaźnika na początek listy
-  i := 1;                            // Inicjalizacja licznika
-  while (wsk <> nil) do             // Iteracja przez listę jednokierunkową
-  begin                            // Warunek dla przejścia do nowego wiersza, gdy osiągnięto 27 elementów w jednym wierszu
+  wsk := Lista;
+  i := 1;
+  while (wsk <> nil) do
+  begin
     if i = 27 then
     begin
-      y := Y - 5;                  // Przesunięcie na nowy wiersz
-      X := X + 11;                // Przesunięcie do nowej kolumny
+      y := Y - 5;
+      X := X + 11;
     end;
-    gotoXY(X, Y);                                           // Ustawienie kursora na pozycji (X, Y)
-    writeln(i:2, ' : ', (wsk^.Dana):3, ' ');               // Wyświetlenie numeru i wartości elementu
-    wsk := wsk^.Nastepny;                                 // Przejście do następnego węzła
-    i := i + 1;                                          // Inkrementacja licznika
-    Y := Y + 1;                                         // Przesunięcie na następną pozycję Y
-  end; //while
+    gotoXY(X, Y);
+    writeln(i:2, ' : ', (wsk^.Dana):3, ' ');
+    wsk := wsk^.Nastepny;
+    i := i + 1;
+    Y := Y + 1;
+  end;
 end;
 
 procedure wyswietlCiagParLiczb(var Pary: tCiagParLiczb; X, Y: integer);
 var
-  i: integer;                 // Licznik iteracji przez ciąg par liczb
+  i: integer;
 begin
   for i := 1 to Pary.n do
   begin
-    gotoXY(X, Y);                      // Ustawienie kursora na pozycji (X, Y)
-    writeln(i:2, ' : ', (Pary.Elem[i].L1):3, ' - ', (Pary.Elem[i].L2):3, ' ');      // Wyświetlenie numeru i par liczb
-    Y := Y + 1;                                                                    // Przesunięcie na następną pozycję Y
+    gotoXY(X, Y);
+    writeln(i:2, ' : ', (Pary.Elem[i].L1):3, ' - ', (Pary.Elem[i].L2):3, ' ');
+    Y := Y + 1;
   end;
 end;
 
 procedure DodajDoKolejki(var kolejka: tKolejka; L: integer);
 var
-  wskNowy: wWezel;                                                        // Wskaźnik na nowy węzeł do dodania do kolejki
+  wskNowy: wWezel;
 begin
-  new(wskNowy);                                                         // Utworzenie nowego węzła
-  wskNowy^.Dana := L;                                                  // Przypisanie wartości do pola Dana w nowym węźle
+  new(wskNowy);
+  wskNowy^.Dana := L;
   wskNowy^.Nastepny := nil;
   if kolejka.Pierwszy = nil then
-    kolejka.Pierwszy := wskNowy                                      // Jeśli kolejka jest pusta, nowy węzeł staje się pierwszym elementem
+    kolejka.Pierwszy := wskNowy
   else
-    kolejka.Ostatni^.Nastepny := wskNowy;                          // W przeciwnym razie nowy węzeł zostaje dodany na koniec kolejki
-  Kolejka.Ostatni := wskNowy;                                     // Aktualizacja wskaźnika Ostatni na nowy węzeł
+    kolejka.Ostatni^.Nastepny := wskNowy;
+  Kolejka.Ostatni := wskNowy;
 end;
 
 function PobierzZKolejki(var kolejka: tKolejka): integer;
 var
-  L: integer;                                                // Zmienna do przechowania pobranej wartości z kolejki
-  wskUsuw: wWezel;                                          // Wskaźnik na węzeł do usunięcia z kolejki
+  L: integer;
+  wskUsuw: wWezel;
 begin
   if kolejka.Pierwszy = nil then
-    PobierzZKolejki := 0                                // Jeśli kolejka jest pusta, zwróć zero
+    PobierzZKolejki := 0
   else
   begin
-    L := kolejka.Pierwszy^.Dana;                              // Pobierz wartość z pierwszego elementu kolejki
-    wskUsuw := kolejka.Pierwszy;                             // Przypisz wskaźnik do pierwszego elementu kolejki do zmiennej tymczasowej
-    kolejka.Pierwszy := kolejka.Pierwszy^.Nastepny;         // Aktualizuj wskaźnik Pierwszy na drugi element
-    dispose(wskUsuw);                                      // Zwolnij pamięć za pomocą dispose
-    if kolejka.Pierwszy = nil then                        // Jeśli kolejka stała się pusta, zaktualizuj wskaźnik Ostatni
+    L := kolejka.Pierwszy^.Dana;
+    wskUsuw := kolejka.Pierwszy;
+    kolejka.Pierwszy := kolejka.Pierwszy^.Nastepny;
+    dispose(wskUsuw);
+    if kolejka.Pierwszy = nil then
       kolejka.Ostatni := nil;
-
-    PobierzZKolejki := L;                              // Zwróć pobraną wartość z kolejki
+    PobierzZKolejki := L;
   end;
 end;
 
 procedure PolozNaStos(var stos: wWezel; L: integer);
 var
-  wskNowy: wWezel;                                          // Wskaźnik na nowy węzeł do dodania na stos
+  wskNowy: wWezel;
 begin
-  new(wskNowy);                                           // Utworzenie nowego węzła
-  wskNowy^.Dana := L;                                    // Przypisanie wartości do pola Dana w nowym węźle
-  wskNowy^.Nastepny := stos;                            // Ustawienie wskaźnika Nastepny na poprzedni wierzchołek stosu
-  stos := wskNowy;                                     // Aktualizacja wskaźnika stosu na nowy węzeł
+  new(wskNowy);
+  wskNowy^.Dana := L;
+  wskNowy^.Nastepny := stos;
+  stos := wskNowy;
 end;
 
 function ZdejmijZeStosu(var stos: wWezel): integer;
 var
-  L: integer;                                    // Zmienna do przechowania zdjętej wartości ze stosu
-  wskUsuw: wWezel;                              // Wskaźnik na węzeł do usunięcia ze stosu
+  L: integer;
+  wskUsuw: wWezel;
 begin
   if stos = nil then
-    ZdejmijZeStosu := 0                         // Jeśli stos jest pusty, zwróć zero
+    ZdejmijZeStosu := 0
   else
   begin
-    L := stos^.Dana;                                 // Pobierz wartość ze szczytu stosu
-    wskUsuw := stos;                                // Przypisz wskaźnik na wierzchołek stosu do zmiennej tymczasowej
-    stos := stos^.Nastepny;                        // Aktualizuj wskaźnik stosu na następny element
-    dispose(wskUsuw);                             // Zwolnij pamięć za pomocą dispose
-
-    ZdejmijZeStosu := L;                           // Zwróć zdjętą wartość ze stosu
+    L := stos^.Dana;
+    wskUsuw := stos;
+    stos := stos^.Nastepny;
+    dispose(wskUsuw);
+    ZdejmijZeStosu := L;
   end;
 end;
 
 procedure LosujLiczbyDoKolejki(var kolejka: tKolejka);
 var
-  L: integer;                                      // Zmienna do przechowania losowej liczby
-  i: integer;                                     // Licznik iteracji
+  L: integer;
+  i: integer;
 begin
-  while kolejka.Pierwszy <> nil do                    // Opróżnij kolejkę, usuwając wszystkie elementy
+  while kolejka.Pierwszy <> nil do
     L := PobierzZKolejki(kolejka);
-
-  for i := 1 to 25 do                               // Losuj i dodaj 25 liczb do kolejki
+  for i := 1 to 25 do
   begin
-    L := random(1000);                               // Wygeneruj losową liczbę całkowitą z przedziału [0, 999]
-    DodajDoKolejki(kolejka, L);                     // Dodaj wylosowaną liczbę do kolejki
+    L := random(1000);
+    DodajDoKolejki(kolejka, L);
   end;
 end;
 
 procedure RealizAlgCwicz(var kolejka: tKolejka; var pary: tCiagParLiczb);
 var
-  L, LNparz, LParz: integer;                           // Zmienne do przechowywania aktualnej liczby oraz liczb z stosów
+  L, LNparz, LParz: integer;
 begin
-  while StosNparz <> nil do                          // Opróżnij oba stosy, usuwając wszystkie elementy
+  while StosNparz <> nil do
     L := ZdejmijZeStosu(StosNparz);
   while StosParz <> nil do
     L := ZdejmijZeStosu(StosParz);
-
-  while kolejka.Pierwszy <> nil do                   // Przeprowadź operacje na elementach kolejki
+  while kolejka.Pierwszy <> nil do
   begin
     L := PobierzZKolejki(kolejka);
-    if L mod 2 <> 0 then                             // Jeśli liczba jest nieparzysta, umieść na stosie nieparzystych
+    if L mod 2 <> 0 then
       PolozNaStos(StosNparz, L)
     else
-      PolozNaStos(StosParz, L);                     // W przeciwnym razie umieść na stosie parzystych
+      PolozNaStos(StosParz, L);
   end;
-
-  pary.n := 0;                                                // Inicjalizuj licznik par w strukturze pary
-  while (StosNparz <> nil) and (StosParz <> nil) do          // Dopóki oba stosy nie są puste, pobieraj liczby z obu stosów i twórz pary
+  pary.n := 0;
+  while (StosNparz <> nil) and (StosParz <> nil) do
   begin
     LNparz := ZdejmijZeStosu(StosNparz);
     LParz := ZdejmijZeStosu(StosParz);
-    pary.n := pary.n + 1;                                   // Zwiększ licznik par i zapisz parę liczb w strukturze pary
+    pary.n := pary.n + 1;
     pary.Elem[pary.n].L1 := LNparz;
     pary.Elem[pary.n].L2 := LParz;
   end;
 end;
 
 begin
-  Randomize;                                          // Inicjalizacja generatora liczb losowych
-  Kolejka.Pierwszy := nil;                           // Inicjalizacja wskaźników struktury Kolejka
+  Randomize;
+  Kolejka.Pierwszy := nil;
   Kolejka.Ostatni := nil;
-  StosNparz := nil;                                    // Inicjalizacja wskaźników stosów StosNparz i StosParz
+  StosNparz := nil;
   StosParz := nil;
-  ParyLiczb.N := 0;                                  // Inicjalizacja licznika par w strukturze ParyLiczb
+  ParyLiczb.N := 0;
 
-  wyswietlInfoOProgramie;                          // Wyświetlenie informacji o programie
+  wyswietlInfoOProgramie;
   writeln;
   writeln('Nacisnij <ENTER>... ');
   readln;
 
-  ClrScr;                                             // Wyczyszczenie ekranu konsoli
+  ClrScr;
 
-  LosujLiczbyDoKolejki(Kolejka);                    // Wygenerowanie losowych liczb i dodanie ich do kolejki
+  LosujLiczbyDoKolejki(Kolejka);
 
   gotoXY(1, 1);
   writeln('- KOLEJKA -');
-  wyswietlListe(Kolejka.Pierwszy, 2, 2);             // Wyświetlenie zawartości kolejki
+  wyswietlListe(Kolejka.Pierwszy, 2, 2);
 
-  RealizAlgCwicz(Kolejka, ParyLiczb);              // Realizacja algorytmu ćwiczeniowego
+  RealizAlgCwicz(Kolejka, ParyLiczb);
 
   gotoXY(16, 1);
   writeln('- STOS NPARZ -');
-  wyswietlListe(StosNparz, 18, 2);                 // Wyświetlenie zawartości stosu nieparzystych
+  wyswietlListe(StosNparz, 18, 2);
   gotoXY(38, 1);
   writeln('- STOS PARZ -');
-  wyswietlListe(StosParz, 40, 2);                 // Wyświetlenie zawartości stosu parzystych
+  wyswietlListe(StosParz, 40, 2);
   gotoXY(54, 1);
   writeln('- PARY LICZB -');
-  wyswietlCiagParLiczb(ParyLiczb, 55, 2);          // Wyświetlenie zawartości ciągu par liczb
+  wyswietlCiagParLiczb(ParyLiczb, 55, 2);
 
   gotoXY(1, 28);
   writeln('Aby zakonczyc, nacisnij <ENTER>');
