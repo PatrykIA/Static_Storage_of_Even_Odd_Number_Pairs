@@ -1,54 +1,54 @@
 uses CRT;
 
 type
-  wWezel = ^tWezel;
-  tWezel = record
-    Dana: integer;                           
-    Nastepny: wWezel;                       
+  pNode = ^tNode;
+  tNode = record
+    Data: integer;
+    Next: pNode;
   end;
 
-  tKolejka = record
-    Pierwszy, Ostatni: wWezel;                 
+  tQueue = record
+    First, Last: pNode;
   end;
 
-  tParaLiczb = record
-    L1, L2: integer;                            
+  tPairOfNumbers = record
+    N1, N2: integer;
   end;
 
-  tCiagParLiczb = record
-    Elem: array[1..25] of tParaLiczb;    
-    n: integer;                         
+  tSequenceOfPairs = record
+    Elem: array[1..25] of tPairOfNumbers;
+    n: integer;
   end;
 
 var
-  Kolejka: tKolejka;
-  StosNparz, StosParz: wWezel;
-  ParyLiczb: tCiagParLiczb;
+  Queue: tQueue;
+  StackOdd, StackEven: pNode;
+  PairsOfNumbers: tSequenceOfPairs;
 
-procedure wyswietlInfoOProgramie; forward;
-procedure wyswietlListe(Lista: wWezel; X, Y: integer); forward;
-procedure wyswietlCiagParLiczb(var Pary: tCiagParLiczb; X, Y: integer); forward;
-procedure DodajDoKolejki(var kolejka: tKolejka; L: integer); forward;
-function PobierzZKolejki(var kolejka: tKolejka): integer; forward;
-procedure PolozNaStos(var stos: wWezel; L: integer); forward;
-function ZdejmijZeStosu(var stos: wWezel): integer; forward;
-procedure LosujLiczbyDoKolejki(var kolejka: tKolejka); forward;
-procedure RealizAlgCwicz(var kolejka: tKolejka; var pary: tCiagParLiczb); forward;
+procedure displayProgramInfo; forward;
+procedure displayList(List: pNode; X, Y: integer); forward;
+procedure displaySequenceOfPairs(var Pairs: tSequenceOfPairs; X, Y: integer); forward;
+procedure addToQueue(var queue: tQueue; L: integer); forward;
+function retrieveFromQueue(var queue: tQueue): integer; forward;
+procedure pushToStack(var stack: pNode; L: integer); forward;
+function popFromStack(var stack: pNode): integer; forward;
+procedure generateRandomNumbersToQueue(var queue: tQueue); forward;
+procedure executeExerciseAlgorithm(var queue: tQueue; var pairs: tSequenceOfPairs); forward;
 
-procedure wyswietlInfoOProgramie;
+procedure displayProgramInfo;
 begin
-  writeln('Program:Program zapisujący w tablicy zbiór par liczb parzysta-nieparzysta, ver 3.0, _AiSD7_Z2');
-  writeln('Autor: Rogowski Patryk, Numer indeksu 162866, Rok 1,Wydział Techniki i Informatyki, grupa D2, Sem 1');
+  writeln('Program: Program storing a set of even-odd number pairs in an array, ver 3.0, _AiSD7_Z2');
+  writeln('Author: Rogowski Patryk, Index number 162866, Year 1, Faculty of Technology and Informatics, group D2, Sem 1');
 end;
 
-procedure wyswietlListe(Lista: wWezel; X, Y: integer);
+procedure displayList(List: pNode; X, Y: integer);
 var
-  wsk: wWezel;
+  ptr: pNode;
   i: integer;
 begin
-  wsk := Lista;
+  ptr := List;
   i := 1;
-  while (wsk <> nil) do
+  while (ptr <> nil) do
   begin
     if i = 27 then
     begin
@@ -56,160 +56,160 @@ begin
       X := X + 11;
     end;
     gotoXY(X, Y);
-    writeln(i:2, ' : ', (wsk^.Dana):3, ' ');
-    wsk := wsk^.Nastepny;
+    writeln(i:2, ' : ', (ptr^.Data):3, ' ');
+    ptr := ptr^.Next;
     i := i + 1;
     Y := Y + 1;
   end;
 end;
 
-procedure wyswietlCiagParLiczb(var Pary: tCiagParLiczb; X, Y: integer);
+procedure displaySequenceOfPairs(var Pairs: tSequenceOfPairs; X, Y: integer);
 var
   i: integer;
 begin
-  for i := 1 to Pary.n do
+  for i := 1 to Pairs.n do
   begin
     gotoXY(X, Y);
-    writeln(i:2, ' : ', (Pary.Elem[i].L1):3, ' - ', (Pary.Elem[i].L2):3, ' ');
+    writeln(i:2, ' : ', (Pairs.Elem[i].N1):3, ' - ', (Pairs.Elem[i].N2):3, ' ');
     Y := Y + 1;
   end;
 end;
 
-procedure DodajDoKolejki(var kolejka: tKolejka; L: integer);
+procedure addToQueue(var queue: tQueue; L: integer);
 var
-  wskNowy: wWezel;
+  newPtr: pNode;
 begin
-  new(wskNowy);
-  wskNowy^.Dana := L;
-  wskNowy^.Nastepny := nil;
-  if kolejka.Pierwszy = nil then
-    kolejka.Pierwszy := wskNowy
+  new(newPtr);
+  newPtr^.Data := L;
+  newPtr^.Next := nil;
+  if queue.First = nil then
+    queue.First := newPtr
   else
-    kolejka.Ostatni^.Nastepny := wskNowy;
-  Kolejka.Ostatni := wskNowy;
+    queue.Last^.Next := newPtr;
+  queue.Last := newPtr;
 end;
 
-function PobierzZKolejki(var kolejka: tKolejka): integer;
+function retrieveFromQueue(var queue: tQueue): integer;
 var
   L: integer;
-  wskUsuw: wWezel;
+  delPtr: pNode;
 begin
-  if kolejka.Pierwszy = nil then
-    PobierzZKolejki := 0
+  if queue.First = nil then
+    retrieveFromQueue := 0
   else
   begin
-    L := kolejka.Pierwszy^.Dana;
-    wskUsuw := kolejka.Pierwszy;
-    kolejka.Pierwszy := kolejka.Pierwszy^.Nastepny;
-    dispose(wskUsuw);
-    if kolejka.Pierwszy = nil then
-      kolejka.Ostatni := nil;
-    PobierzZKolejki := L;
+    L := queue.First^.Data;
+    delPtr := queue.First;
+    queue.First := queue.First^.Next;
+    dispose(delPtr);
+    if queue.First = nil then
+      queue.Last := nil;
+    retrieveFromQueue := L;
   end;
 end;
 
-procedure PolozNaStos(var stos: wWezel; L: integer);
+procedure pushToStack(var stack: pNode; L: integer);
 var
-  wskNowy: wWezel;
+  newPtr: pNode;
 begin
-  new(wskNowy);
-  wskNowy^.Dana := L;
-  wskNowy^.Nastepny := stos;
-  stos := wskNowy;
+  new(newPtr);
+  newPtr^.Data := L;
+  newPtr^.Next := stack;
+  stack := newPtr;
 end;
 
-function ZdejmijZeStosu(var stos: wWezel): integer;
+function popFromStack(var stack: pNode): integer;
 var
   L: integer;
-  wskUsuw: wWezel;
+  delPtr: pNode;
 begin
-  if stos = nil then
-    ZdejmijZeStosu := 0
+  if stack = nil then
+    popFromStack := 0
   else
   begin
-    L := stos^.Dana;
-    wskUsuw := stos;
-    stos := stos^.Nastepny;
-    dispose(wskUsuw);
-    ZdejmijZeStosu := L;
+    L := stack^.Data;
+    delPtr := stack;
+    stack := stack^.Next;
+    dispose(delPtr);
+    popFromStack := L;
   end;
 end;
 
-procedure LosujLiczbyDoKolejki(var kolejka: tKolejka);
+procedure generateRandomNumbersToQueue(var queue: tQueue);
 var
   L: integer;
   i: integer;
 begin
-  while kolejka.Pierwszy <> nil do
-    L := PobierzZKolejki(kolejka);
+  while queue.First <> nil do
+    L := retrieveFromQueue(queue);
   for i := 1 to 25 do
   begin
     L := random(1000);
-    DodajDoKolejki(kolejka, L);
+    addToQueue(queue, L);
   end;
 end;
 
-procedure RealizAlgCwicz(var kolejka: tKolejka; var pary: tCiagParLiczb);
+procedure executeExerciseAlgorithm(var queue: tQueue; var pairs: tSequenceOfPairs);
 var
-  L, LNparz, LParz: integer;
+  L, LOdd, LEven: integer;
 begin
-  while StosNparz <> nil do
-    L := ZdejmijZeStosu(StosNparz);
-  while StosParz <> nil do
-    L := ZdejmijZeStosu(StosParz);
-  while kolejka.Pierwszy <> nil do
+  while StackOdd <> nil do
+    L := popFromStack(StackOdd);
+  while StackEven <> nil do
+    L := popFromStack(StackEven);
+  while queue.First <> nil do
   begin
-    L := PobierzZKolejki(kolejka);
+    L := retrieveFromQueue(queue);
     if L mod 2 <> 0 then
-      PolozNaStos(StosNparz, L)
+      pushToStack(StackOdd, L)
     else
-      PolozNaStos(StosParz, L);
+      pushToStack(StackEven, L);
   end;
-  pary.n := 0;
-  while (StosNparz <> nil) and (StosParz <> nil) do
+  pairs.n := 0;
+  while (StackOdd <> nil) and (StackEven <> nil) do
   begin
-    LNparz := ZdejmijZeStosu(StosNparz);
-    LParz := ZdejmijZeStosu(StosParz);
-    pary.n := pary.n + 1;
-    pary.Elem[pary.n].L1 := LNparz;
-    pary.Elem[pary.n].L2 := LParz;
+    LOdd := popFromStack(StackOdd);
+    LEven := popFromStack(StackEven);
+    pairs.n := pairs.n + 1;
+    pairs.Elem[pairs.n].N1 := LOdd;
+    pairs.Elem[pairs.n].N2 := LEven;
   end;
 end;
 
 begin
   Randomize;
-  Kolejka.Pierwszy := nil;
-  Kolejka.Ostatni := nil;
-  StosNparz := nil;
-  StosParz := nil;
-  ParyLiczb.N := 0;
+  Queue.First := nil;
+  Queue.Last := nil;
+  StackOdd := nil;
+  StackEven := nil;
+  PairsOfNumbers.n := 0;
 
-  wyswietlInfoOProgramie;
+  displayProgramInfo;
   writeln;
-  writeln('Nacisnij <ENTER>... ');
+  writeln('Press <ENTER>... ');
   readln;
 
   ClrScr;
 
-  LosujLiczbyDoKolejki(Kolejka);
+  generateRandomNumbersToQueue(Queue);
 
   gotoXY(1, 1);
-  writeln('- KOLEJKA -');
-  wyswietlListe(Kolejka.Pierwszy, 2, 2);
+  writeln('- QUEUE -');
+  displayList(Queue.First, 2, 2);
 
-  RealizAlgCwicz(Kolejka, ParyLiczb);
+  executeExerciseAlgorithm(Queue, PairsOfNumbers);
 
   gotoXY(16, 1);
-  writeln('- STOS NPARZ -');
-  wyswietlListe(StosNparz, 18, 2);
+  writeln('- STACK ODD -');
+  displayList(StackOdd, 18, 2);
   gotoXY(38, 1);
-  writeln('- STOS PARZ -');
-  wyswietlListe(StosParz, 40, 2);
+  writeln('- STACK EVEN -');
+  displayList(StackEven, 40, 2);
   gotoXY(54, 1);
-  writeln('- PARY LICZB -');
-  wyswietlCiagParLiczb(ParyLiczb, 55, 2);
+  writeln('- PAIRS OF NUMBERS -');
+  displaySequenceOfPairs(PairsOfNumbers, 55, 2);
 
   gotoXY(1, 28);
-  writeln('Aby zakonczyc, nacisnij <ENTER>');
+  writeln('To end, press <ENTER>');
   readln;
 end.
