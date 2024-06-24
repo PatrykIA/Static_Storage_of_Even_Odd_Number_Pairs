@@ -1,4 +1,4 @@
-Static-Storage-of-Even-Odd-Number-Pairs
+Static_Storage_of_Even_Odd_Number_Pairs
 
 Objective
 
